@@ -27,8 +27,8 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/OWNER/weekly-product-digest-mcp"
-Repository = "https://github.com/OWNER/weekly-product-digest-mcp"
+Homepage = "https://github.com/salwks/CreateTrend"
+Repository = "https://github.com/salwks/CreateTrend"
 
 [project.scripts]
 weekly-product-digest-mcp = "server:main"

@@ -1,6 +1,23 @@
 # Weekly Product Digest MCP
 
+[![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![MCP](https://img.shields.io/badge/MCP-FastMCP-7C3AED)](https://modelcontextprotocol.io/)
+![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)
+![Sources](https://img.shields.io/badge/sources-6-orange)
+
 주간 스타트업·제품·인디메이커 뉴스를 여러 공개 소스에서 모아 **리포트 형식**으로 뽑아주는 MCP 서버입니다. (FastMCP / Python)
+
+**TechCrunch · BetaNews · Product Hunt · Indie Hackers · Hacker News · Reddit** 6개 소스를 7일 윈도로 병렬 수집 →
+**제품 출시·투자 우선 Key Picks** + 소스별 리포트. 한 소스가 죽어도 나머지로 완성됩니다.
+
+```text
+🎯 Key Picks — 제품 출시 · 투자 우선 (키워드 선별)
+- DeepSeek reportedly in talks to raise $1.5B, then IPO — TechCrunch · 투자 · 제품 출시
+- The founder of Hinge raised $18M to build a new AI dating service — TechCrunch · 투자
+⭐ Highlights (HN points)
+📌 TechCrunch / BetaNews / Product Hunt / Indie Hackers / Hacker News / Reddit …
+```
 
 ## 수집 소스
 
@@ -94,40 +111,69 @@ $env:KEY_PICK_MODE     = "auto"            # 기본 heuristic. LLM 쓰려면 aut
 
 ## 설치
 
-```powershell
-cd D:\POLARION\weekly_product_digest_mcp
+**요구사항**: Python 3.10+
+
+```bash
+git clone https://github.com/salwks/CreateTrend.git
+cd CreateTrend
+
+# 가상환경 생성 + 활성화
 python -m venv .venv
+# Windows (PowerShell):
 .\.venv\Scripts\Activate.ps1
+# macOS / Linux:
+source .venv/bin/activate
+
+# 의존성 설치
 pip install -r requirements.txt
+# 또는 패키지로 설치(콘솔 스크립트 생성):
+pip install -e .
 ```
 
 동작 확인:
 
-```powershell
+```bash
 python -c "import server; print('ok')"
 ```
 
-## Claude Code / Desktop 등록
+## Claude Desktop / Claude Code 등록
 
-`claude_desktop_config.json`(또는 해당 MCP 설정)의 `mcpServers`에 추가:
+MCP 설정 파일(`claude_desktop_config.json` 등)의 `mcpServers`에 추가합니다. 아래 경로 두 곳(`<REPO>`)을 **clone한 절대 경로**로 바꿔주세요.
 
+**Windows**
 ```json
 {
   "mcpServers": {
     "weekly-product-digest": {
-      "command": "D:\\POLARION\\weekly_product_digest_mcp\\.venv\\Scripts\\python.exe",
-      "args": ["D:\\POLARION\\weekly_product_digest_mcp\\server.py"]
+      "command": "<REPO>\\.venv\\Scripts\\python.exe",
+      "args": ["<REPO>\\server.py"]
     }
   }
 }
 ```
 
-> venv를 안 쓰면 `command`를 시스템 `python.exe` 경로로 지정하고, 전역에 `pip install -r requirements.txt` 하면 됩니다.
+**macOS / Linux**
+```json
+{
+  "mcpServers": {
+    "weekly-product-digest": {
+      "command": "<REPO>/.venv/bin/python",
+      "args": ["<REPO>/server.py"]
+    }
+  }
+}
+```
 
-Claude Code CLI에서 등록하려면:
+> venv를 안 쓰면 `command`를 시스템 `python`(또는 `python3`) 경로로 지정하고 전역에 의존성을 설치하세요.
+> LLM 선별을 쓰려면 위 블록에 `"env": {"ANTHROPIC_API_KEY": "sk-ant-...", "KEY_PICK_MODE": "auto"}`를 추가하면 됩니다.
 
-```powershell
-claude mcp add weekly-product-digest -- D:\POLARION\weekly_product_digest_mcp\.venv\Scripts\python.exe D:\POLARION\weekly_product_digest_mcp\server.py
+Claude Code CLI로 등록(경로는 실제 clone 위치로):
+
+```bash
+# Windows
+claude mcp add weekly-product-digest -- "<REPO>\.venv\Scripts\python.exe" "<REPO>\server.py"
+# macOS / Linux
+claude mcp add weekly-product-digest -- "<REPO>/.venv/bin/python" "<REPO>/server.py"
 ```
 
 ## 사용 예 (등록 후 대화에서)
@@ -141,3 +187,11 @@ claude mcp add weekly-product-digest -- D:\POLARION\weekly_product_digest_mcp\.v
 - 소스 추가/변경: `server.py`의 `SOURCES` 딕셔너리 수정.
 - Reddit 서브레딧 변경: `reddit` 소스의 `extra["subreddits"]`.
 - Show HN 최소 추천수: `hackernews` 소스의 `extra["min_points"]`.
+
+## 리포트 출력
+
+생성된 주간 리포트는 `reports/` 폴더에 마크다운으로 쌓입니다(저장소에는 포함되지 않음 — `.gitignore` 처리). 한글 번역+요약본을 원하면 리포트를 뽑은 뒤 요청하세요.
+
+## License
+
+[MIT](LICENSE) © weekly-product-digest-mcp contributors
